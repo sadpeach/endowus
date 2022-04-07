@@ -1,27 +1,34 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import * as d3 from 'd3';
-import { setXAxis, setYAxis, drawAxis, drawLine, restyleData } from './ChartUtils/utils';
+import { restyleData, reGroupData } from './ChartUtils/utils';
+import { Axis } from "./ChartComponent/Axis";
+import { tooltip } from './ChartComponent/Tooltip';
+import { drawLine } from './ChartComponent/PlotLine';
+import { AxisUtils } from './ChartUtils/axisUtils';
 
 const Chart = (data) => {
 
     const ref = useRef(null);
 
     //sizing
-    const width = 900;
-    const height = 700;
+    const width = 1200;
+    const height = 500;
 
-    const margin = { top: 20, right: 20, bottom: 60, left: 60 },
+    const margin = { top: 20, right: 20, bottom: 20, left: 60 },
         svgWidth = width - margin.left - margin.right,
         svgHeight = height - margin.top - margin.bottom;
+
+    const utils = AxisUtils(data.data,svgHeight,svgWidth);
+    const {xScale,yScale,yTickFormat} = utils;
 
     useEffect(() => {
 
         if (data.data) {
 
             var processData = restyleData(data.data);
-            // console.log("processData:" + JSON.stringify(processData))
             const svgElement = d3.select(ref.current)
             svgElement.selectAll("*").remove();
+            d3.select("#tooltip").remove();
 
             //setting svg
             var svg = svgElement
@@ -44,9 +51,6 @@ const Chart = (data) => {
             //setting y-axis
             const yScale = setYAxis(processData, svgHeight)
 
-            //find y-axis max
-            console.log("max of y:"+d3.max(processData, d => d.value))
-
             //draw y-axis
             drawAxis({
                 container: svg,
@@ -54,13 +58,26 @@ const Chart = (data) => {
                 tickFormat: (val) => `S$${(val / 1000000).toFixed(1)}m`
             })
 
+            //get groupedData 
+            const regroupedData = reGroupData(processData)
+
             //plotting line
             drawLine({
-                container:svg,
-                processData,
+                container: svg,
+                regroupedData,
                 xScale,
                 yScale
             })
+
+            //tooltip
+            tooltip(
+                regroupedData,
+                svg,
+                svgWidth,
+                svgHeight,
+                xScale,
+                yScale
+            );
 
         }
 
@@ -68,7 +85,19 @@ const Chart = (data) => {
 
     return (
         <div id="chart">
-            <svg ref={ref}/>
+            <svg ref={ref}>
+                <Axis
+                    type="left"
+                    scale={yScale}
+                    tickFormat={yTickFormat}
+                />
+                <Axis
+                    type="bottom"
+                    className="axisX"
+                    scale={xScale}
+                    transform={`translate(0, ${svgHeight})`}
+                />
+            </svg>
         </div>
 
     )
