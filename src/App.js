@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import axios from "axios";
 import Backdrop from '@mui/material/Backdrop';
+import Container from '@mui/material/Container';
 
 function App() {
 
@@ -14,7 +15,7 @@ function App() {
   const [initialInvestment, setInitalInvestment] = useState(0);
   const [monthlyInvestment, setMonthlyInvestment] = useState(0);
   const [backDropOpen, setBackDropOpen] = useState(false);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
 
@@ -27,7 +28,6 @@ function App() {
 
 
     async function getData() {
-      console.log("value entered:", result)
       try {
         const response = await axios.post(baseURL, result);
         setData(response.data)
@@ -46,39 +46,42 @@ function App() {
 
     <div className="App">
       {/* {console.log("data retrieved at app:" + JSON.stringify(data))} */}
-      <Stack spacing={2}>
-
-        <Grid item>
-          <Stack spacing={2}>
-            <h1>Plan Projection</h1>
-            <p>This is an illustration of your plan.</p>
-          </Stack>
-        </Grid>
-
-        <Grid container spacing={3} columns={{ xs: 4, sm: 8, md: 12 }}>
-          <Grid item>
-            <TextField id="outlined-basic" label="Initial Investment" variant="outlined" onChange={e => setInitalInvestment(e.target.value)} />
-          </Grid>
+      <Container fixed>
+       
+        <Stack spacing={2}>
 
           <Grid item>
-            <TextField id="outlined-basic" label="Monthly Investment" variant="outlined" onChange={e => setMonthlyInvestment(e.target.value)} />
+            <Stack spacing={2}>
+              <h1>Plan Projection</h1>
+              <p>This is an illustration of your plan.</p>
+            </Stack>
           </Grid>
-        </Grid>
 
-        {/* set up backdrop */}
-        <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={backDropOpen}
-        >
-          <CircularProgress />
-          <Grid item xs={12}>
+          <Grid container spacing={3} columns={{ xs: 4, sm: 8, md: 12 }}>
+            <Grid item>
+              <TextField id="outlined-basic" label="Initial Investment" variant="outlined" onChange={e => setInitalInvestment(e.target.value)} />
+            </Grid>
+
+            <Grid item>
+              <TextField id="outlined-basic" label="Monthly Investment" variant="outlined" onChange={e => setMonthlyInvestment(e.target.value)} />
+            </Grid>
           </Grid>
-        </Backdrop>
 
-        {/* set up chart */}
-        <Chart data={data} />
+          {/* set up backdrop */}
+          <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={backDropOpen}
+          >
+            <CircularProgress />
+            <Grid item xs={12}>
+            </Grid>
+          </Backdrop>
 
-      </Stack>
+          {/* set up chart */}
+          <Chart data={data} />
+
+        </Stack>
+      </Container>
 
     </div>
 
