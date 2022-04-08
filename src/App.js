@@ -15,7 +15,7 @@ function App() {
   const [initialInvestment, setInitalInvestment] = useState(0);
   const [monthlyInvestment, setMonthlyInvestment] = useState(0);
   const [backDropOpen, setBackDropOpen] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
 
   useEffect(() => {
 
@@ -47,7 +47,7 @@ function App() {
     <div className="App">
       {/* {console.log("data retrieved at app:" + JSON.stringify(data))} */}
       <Container fixed>
-       
+
         <Stack spacing={2}>
 
           <Grid item>
@@ -78,7 +78,7 @@ function App() {
           </Backdrop>
 
           {/* set up chart */}
-          <Chart data={data} />
+          {data!=null ? <Chart data={data} /> : ""}
 
         </Stack>
       </Container>
