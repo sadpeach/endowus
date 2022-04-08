@@ -20,8 +20,6 @@ To start the project
   -  Component to show data dots on each plotted line when hovering graph.
   -  Component to hold the tooltip message.
 
-### ChartComponent/ChartUtils/
-
 ### ChartComponent/ChartUtils/utils.js
 - contains common functions such as reformatting, regrouping, and color labeling of the data retrieved from API.
 
