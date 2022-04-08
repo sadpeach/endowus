@@ -69,6 +69,3 @@ export const setUpColors = (regroupedData) => {
     var colour = d3.scaleOrdinal().domain(typeName).range(["#c2ff61", "#32a852", "#6b0a70", "#a84c32", "#03abff"]);
     return colour
 }
-
-// https://blog.griddynamics.com/using-d3-js-with-react-js-an-8-step-comprehensive-manual/
-// https://bl.ocks.org/dianaow/0da76b59a7dffe24abcfa55d5b9e163e
